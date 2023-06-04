@@ -1,19 +1,36 @@
-// use crate::commands;
+#![crate_type = "bin"]
+
+mod commands;
+
+use std::env;
+
+use anyhow::{Context, Error, Result};
 use poise::serenity_prelude as serenity;
-use bionic_reading_api::{bionic::{Error, Fixation, Saccade}, client::Client as BionicClient};
 
-// type Context<'a> = poise::Context<'a, Data, Error>;
-// type Error = Box<dyn std::error::Error + Send + Sync>;
-
-const API_KEY: &str = "api_key";
+const DISCORD_TOKEN_HANDLE: &str = "BIONIC_DISCORD_TOKEN";
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    let client = BionicClient::new(API_KEY);
+    let discord_token = env::var(DISCORD_TOKEN_HANDLE)?;
 
-    let res = client.convert("Lorem ipsum dolor sit amet").fixation(Fixation::Weakest).saccade(Saccade::Fewest).send().await?;
+    let framework = poise::Framework::builder()
+        .options(poise::FrameworkOptions {
+            commands: vec![commands::convert::convert()],
+            ..Default::default()
+        })
+        .token(discord_token)
+        .intents(serenity::GatewayIntents::non_privileged())
+        .setup(|ctx, _ready, framework| {
+            Box::pin(async move {
+                poise::builtins::register_globally(ctx, &framework.options().commands)
+                    .await
+                    .context("Failed to register commands globally")?;
 
-    println!("{:?}", res.markdown().unwrap());
+                Ok(())
+            })
+        });
+
+    framework.run().await?;
 
     Ok(())
 }

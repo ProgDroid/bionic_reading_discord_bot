@@ -1,36 +1,32 @@
 #![crate_type = "bin"]
 
 mod commands;
+mod config;
 
-use std::env;
+use crate::commands::convert::convert;
+use crate::config::Config;
 
-use anyhow::{Context, Error, Result};
-use poise::serenity_prelude as serenity;
+use anyhow::{Error, Result};
+use rusty_interaction::handler::InteractionHandler;
 
-const DISCORD_TOKEN_HANDLE: &str = "BIONIC_DISCORD_TOKEN";
+#[actix_web::main]
+async fn main() -> Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
 
-#[tokio::main]
-async fn main() -> Result<(), Error> {
-    let discord_token = env::var(DISCORD_TOKEN_HANDLE)?;
+    let config = Config::load().await?;
 
-    let framework = poise::Framework::builder()
-        .options(poise::FrameworkOptions {
-            commands: vec![commands::convert::convert()],
-            ..Default::default()
-        })
-        .token(discord_token)
-        .intents(serenity::GatewayIntents::non_privileged())
-        .setup(|ctx, _ready, framework| {
-            Box::pin(async move {
-                poise::builtins::register_globally(ctx, &framework.options().commands)
-                    .await
-                    .context("Failed to register commands globally")?;
+    let mut handle = InteractionHandler::new(
+        config.app_id.as_sensitive_str().parse::<u64>()?,
+        config.public_key.as_sensitive_str(),
+        Some(&config.token.as_sensitive_str().to_owned()),
+    );
 
-                Ok(())
-            })
-        });
+    handle.add_data(config.clone());
 
-    framework.run().await?;
+    handle.add_global_command("convert", convert);
 
-    Ok(())
+    handle.run(config.port).await.map_err(Error::from)
 }
+// TODO create service account for cloud run
+// TODO cloud build and deployment from actions
+// TODO check how to make sure it spins to 0

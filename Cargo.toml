@@ -2,11 +2,22 @@
 name = "bionic_reading_discord_bot"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["nando"]
+license-file = "LICENSE"
+description = "Discord bot to convert text to Bionic Reading format"
+repository = "https://github.com/ProgDroid/bionic_reading_discord_bot"
+readme = "README.md"
+keywords = ["bionic", "api", "discord", "bot"]
 
 [dependencies]
-anyhow = "1"
-bionic_reading_api = { path = "../bionic_reading_api" }
-poise = "0.5.5"
-tokio = { version = "1", features = ["full"] }
+actix-web = "4"
+anyhow = "1.0"
+bionic_reading_api = "0.1"
+env_logger = "0.10"
+log = "0.4"
+rusty_interaction = { git = "https://github.com/progdroid/rusty-interaction", branch = "update_actix_web_version", features = ["handler", "security"]}
+secret-vault = { version = "1.8", features=["gcp-secretmanager"] }
+secret-vault-value = { version = "0.3" }
+
+[features]
+cloud = []

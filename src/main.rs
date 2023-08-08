@@ -27,6 +27,3 @@ async fn main() -> Result<()> {
 
     handle.run(config.port).await.map_err(Error::from)
 }
-// TODO create service account for cloud run
-// TODO cloud build and deployment from actions
-// TODO check how to make sure it spins to 0

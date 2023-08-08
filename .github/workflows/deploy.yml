@@ -10,7 +10,7 @@ jobs:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.${{ secrets.GCP_APP_NAME }}:${{ github.ref_name }}
+      IMAGE_NAME: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO }}/${{ secrets.GCP_APP_NAME }}:${{ github.ref_name }}
     steps:
       - name: Login
         uses: google-github-actions/setup-gcloud@v0

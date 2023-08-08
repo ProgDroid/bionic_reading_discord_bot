@@ -32,4 +32,4 @@ jobs:
         run: docker push $IMAGE_NAME
 
       - name: Deploy Docker image
-        run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region ${{ secrets.GCP_REGION }} --platform managed
+        run: gcloud run deploy ${{ secrets.GCP_APP_NAME }} --set-env-vars="PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" --image $IMAGE_NAME --region ${{ secrets.GCP_REGION }} --platform managed

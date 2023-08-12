@@ -34,4 +34,4 @@ jobs:
       - name: Deploy Docker image
         env:
           revision_suffix: "${{ github.ref_name }}"
-        run: gcloud run deploy ${{ secrets.GCP_APP_NAME }} --set-env-vars="PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" --image $IMAGE_NAME --region ${{ secrets.GCP_REGION }} --platform managed --set-revision-suffix ${revision_suffix//./-}
+        run: gcloud run deploy ${{ secrets.GCP_APP_NAME }} --set-env-vars="PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" --image $IMAGE_NAME --region ${{ secrets.GCP_REGION }} --platform managed --revision-suffix ${revision_suffix//./-}

@@ -2,16 +2,22 @@
 
 mod commands;
 mod config;
+mod logger;
 
 use crate::commands::convert::convert;
 use crate::config::Config;
 
 use anyhow::{Error, Result};
 use rusty_interaction::handler::InteractionHandler;
+use std::panic::set_hook;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
+    logger::init()?;
+
+    set_hook(Box::new(|panic_info| {
+        log::error!("{panic_info}");
+    }));
 
     let config = Config::load().await?;
 

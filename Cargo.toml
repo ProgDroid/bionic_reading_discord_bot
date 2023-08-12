@@ -13,11 +13,12 @@ keywords = ["bionic", "api", "discord", "bot"]
 actix-web = "4"
 anyhow = "1.0"
 bionic_reading_api = "0.1"
-env_logger = "0.10"
-log = "0.4"
+google_cloud_logging = "0.1.0"
+log = { version = "0.4", features = ["std"] }
 rusty_interaction = { git = "https://github.com/progdroid/rusty-interaction", branch = "update_actix_web_version", features = ["handler", "security"]}
 secret-vault = { version = "1.8", features=["gcp-secretmanager"] }
 secret-vault-value = { version = "0.3" }
+serde_json = "1.0"
 
 [features]
 cloud = []

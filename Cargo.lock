@@ -474,7 +474,7 @@ dependencies = [
 
 [[package]]
 name = "bionic_reading_discord_bot"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "actix-web",
  "anyhow",
